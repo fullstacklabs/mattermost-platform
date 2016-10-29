@@ -129,6 +129,7 @@ export default class CreatePost extends React.Component {
         } else {
             this.sendMessage(post);
         }
+        this.focusTextbox(true);
     }
 
     sendMessage(post) {
@@ -172,8 +173,8 @@ export default class CreatePost extends React.Component {
         );
     }
 
-    focusTextbox() {
-        if (!Utils.isMobile()) {
+    focusTextbox(keepFocus=false) {
+        if (keepFocus || !Utils.isMobile()) {
             this.refs.textbox.focus();
         }
     }
