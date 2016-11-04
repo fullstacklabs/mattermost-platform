@@ -417,8 +417,10 @@ export default class PostList extends React.Component {
         } else if (this.props.scrollType === ScrollTypes.SIDEBAR_OPEN) {
             // If we are at the bottom then stay there
             if (this.wasAtBottom) {
-                this.refs.postlist.scrollTop = this.refs.postlist.scrollHeight;
+                // this.refs.postlist.scrollTop = this.refs.postlist.scrollHeight;
+                this.scrollToBottom();
             } else {
+                /*
                 window.requestAnimationFrame(() => {
                     this.jumpToPostNode.scrollIntoView();
                     if (this.refs.postlist.scrollTop === this.jumpToPostNode.offsetTop) {
@@ -427,6 +429,13 @@ export default class PostList extends React.Component {
                         this.refs.postlist.scrollTop -= (this.refs.postlist.offsetHeight / Constants.SCROLL_PAGE_FRACTION) + (this.refs.postlist.scrollTop - this.jumpToPostNode.offsetTop);
                     }
                 });
+                */
+                this.jumpToPostNode.scrollIntoView();
+                let scrollTo = this.refs.postlist.scrollTop - (this.refs.postlist.offsetHeight / Constants.SCROLL_PAGE_FRACTION);
+                if (this.refs.postlist.scrollTop !== this.jumpToPostNode.offsetTop) {
+                    scrollTo += (this.refs.postlist.scrollTop - this.jumpToPostNode.offsetTop);
+                }
+                this.animateScrollTo(scrollTo, '200');
             }
         } else if (this.refs.postlist.scrollHeight !== this.prevScrollHeight) {
             window.requestAnimationFrame(() => {
@@ -449,13 +458,21 @@ export default class PostList extends React.Component {
             }
         });
         */
+        /*
         var postList = $(this.refs.postlist);
-        postList.animate({scrollTop: this.refs.postlist.scrollHeight}, '200');
+        postList.animate({scrollTop: this.refs.postlist.scrollHeight - postList.height()}, '200');
+        */
+        this.animateScrollTo(this.refs.postlist.scrollHeight, '200');
     }
 
     scrollToBottomAnimated() {
         var postList = $(this.refs.postlist);
         postList.animate({scrollTop: this.refs.postlist.scrollHeight}, '500');
+    }
+
+    animateScrollTo(scrollValue, duration) {
+        var postList = $(this.refs.postlist);
+        postList.animate({scrollTop: (scrollValue - postList.height())}, duration);
     }
 
     getArchivesIntroMessage() {
